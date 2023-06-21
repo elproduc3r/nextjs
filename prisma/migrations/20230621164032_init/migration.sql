@@ -1,0 +1,8 @@
+-- CreateTable
+CREATE TABLE "Sales" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "product" TEXT NOT NULL,
+    "quantity" INTEGER NOT NULL DEFAULT 1,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);
