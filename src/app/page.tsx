@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { prisma } from '@/db';
 import SaleRow from "./components/SaleRow";
+import ChevronIcon from "./components/ChevronIcon";
 
 const getSales =  async () => {
   return prisma.sales.findMany();
@@ -32,7 +33,10 @@ export default async function Home() {
               <table className="bmin-w-full text-left text-sm font-light">
                 <thead className="border-b bg-neutral-50 font-medium dark:border-neutral-500 dark:text-neutral-800">
                   <tr className="">
-                    <th scope="col" className="px-6 py-4">Date</th>
+                    <th scope="col" className="flex flex-row px-6 py-4">
+                      Date
+                      <ChevronIcon isUp={true} />
+                    </th>
                     <th scope="col" className="px-6 py-4">Product</th>
                     <th scope="col" className="px-6 py-4">Quantity</th>
                     <th scope="col" className="px-6 py-4">Price</th>
@@ -54,6 +58,5 @@ export default async function Home() {
         </div>
       </div>
     </>
-    
   )
 }

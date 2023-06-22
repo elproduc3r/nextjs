@@ -1,49 +1,30 @@
+"use client"
+
+import { useState } from "react";
 import Link from "next/link";
-import { prisma } from "@/db";
-import { redirect } from "next/navigation";
-
-const createTodo = async (data: FormData) => {
-  "use server"
-
-  const product = data.get("product")?.valueOf();
-  const price = data.get("price")?.valueOf();
-  const quantity = data.get("quantity")?.valueOf();
-  const platform = data.get("platform")?.valueOf();
-  const notes = data.get("notes")?.valueOf();
-
-  if(typeof product !== "string") {
-    throw new Error(`Invalid value for product: ${product}`);
-  }
-
-  if(typeof price !== "string") {
-    throw new Error(`Invalid value for price : ${price}`);
-  }
-
-  if(typeof quantity !== "string") {
-    throw new Error(`Invalid value for quantity : ${quantity}`);
-  }
-
-  if(typeof platform !== "string") {
-    throw new Error(`Invalid value for platform : ${platform}`);
-  }
-
-  if(typeof notes !== "string") {
-    throw new Error(`Invalid value for notes : ${notes}`);
-  }
-
-  await prisma.sales.create({data: {
-    product,
-    quantity: parseInt(quantity, 10),
-    price: parseFloat(price),
-    platform,
-    notes
-  }});
-
-  redirect("/");
-
-};
+import createTodo from "./createTodo"
 
 export default function New() {
+
+  const [product, setProduct] = useState("");
+  const [price, setPrice] = useState("0");
+  const [quantity, setQuantity] = useState("1");
+  const [platform, setPlatform] = useState("Facebook MarketPlace");
+  const [notes, setNotes] = useState("");
+  const [isFormValid, setIsFormValid] = useState(true);
+
+  const validate = (e) => {
+    let isAllValid = true;
+    if(product === "" || price === "0" || notes === "") {
+      isAllValid = false;
+    }
+    setIsFormValid(isAllValid);
+    if (!isAllValid) {
+      e.preventDefault();
+    }
+    return isAllValid;
+  }
+
   return (
     <>
       <header
@@ -51,11 +32,21 @@ export default function New() {
       >
         <h1 className="text-2x1">New Sale</h1>
       </header>
-      <form action={createTodo} className="flex gap-2 flex-col">
+
+      {
+        !isFormValid ? (
+          <div style={{backgroundColor: "red"}} className="flex h-5 items-center justify-center py-4 mb-4 w-full rounded-lg bg-danger">
+            <p className="text-neutral-50">Please check all form fields</p>
+          </div>
+        ) : null
+      }
+      
+      <form action={createTodo} onSubmit={validate} className="flex gap-2 flex-col">
         <label htmlFor="product">Product</label>
         <input
           type="text"
           name="product"
+          onChange={e => {setProduct(e.target.value)}}
           className="border border-slate-300 bg-transparent rounded px-2 py-1 outline-none focus-with:border-slate-100"
         />
         <label htmlFor="price">Price</label>
@@ -63,11 +54,13 @@ export default function New() {
           type="text"
           name="price"
           placeholder="$0.00"
+          onChange={e => {setPrice(e.target.value)}}
           className="border border-slate-300 bg-transparent rounded px-2 py-1 outline-none focus-with:border-slate-100"
         />
         <label htmlFor="quantity">Quantity</label>
         <select
           name="quantity"
+          onChange={e => {setQuantity(e.target.options[e.target.selectedIndex].value)}}
           className="border border-slate-300 bg-transparent rounded px-2 py-1 outline-none focus-with:border-slate-100"
         >
           <option value="1">
@@ -90,6 +83,7 @@ export default function New() {
         <select
           name="platform"
           className="border border-slate-300 bg-transparent rounded px-2 py-1 outline-none focus-with:border-slate-100"
+          onChange={e => {setPlatform(e.target.options[e.target.selectedIndex].value)}}
         >
           <option value="Facebook MarketPlace">
             Facebook Marketplace
@@ -108,6 +102,7 @@ export default function New() {
           type="text"
           name="notes"
           className="border border-slate-300 bg-transparent rounded px-2 py-1 outline-none focus-with:border-slate-100"
+          onChange={e => {setNotes(e.target.value)}}
         />
         <div className="flex gap-1 justify-end">
           <Link href=".." className="border border-slate-300 text-slate-300 px-2 py-1 rounded 
@@ -120,9 +115,12 @@ export default function New() {
             Add It
           </button>
         </div>
-
       </form>
+      <footer className="pt-20 sm:pt-32 text-center pb-16">
+        <div className="text-center">
+          <p className="mt-4 text-sm leading-6 text-slate-500">NodeJS Prisma SQLite NextJS ReactJS TailwindCSS</p>
+        </div>
+      </footer>
     </>
-    
   )
-}
+};
