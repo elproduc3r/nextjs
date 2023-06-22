@@ -13,7 +13,7 @@ export default function New() {
   const [notes, setNotes] = useState("");
   const [isFormValid, setIsFormValid] = useState(true);
 
-  const validate = (e) => {
+  const validate = (e: React.FormEvent) => {
     let isAllValid = true;
     if(product === "" || price === "0" || notes === "") {
       isAllValid = false;
