@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import createTodo from "./createTodo"
 
@@ -23,7 +23,29 @@ export default function New() {
       e.preventDefault();
     }
     return isAllValid;
+
   }
+
+
+  const [a, change_a] = useState(1);
+
+  useEffect(() => {
+
+    setTimeout(() => {
+
+      change_a((a) => a + 1); },
+
+    1000);
+
+    if(a>10){
+
+      change_a((a) => 1);
+
+    }
+
+  } );
+
+  console.log({a})
 
   return (
     <>
